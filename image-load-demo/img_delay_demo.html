@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<style type="text/css">
+	img {
+		display: block;
+		margin: 0 auto;
+		width: 300px;
+		height: 300px;
+	}
+</style>
+<body>
+<div class="load-image">
+	<img src="" data-url='img/1.jpg'>
+	<img src="" data-url='img/2.jpg'>
+	<img src="" data-url='img/3.jpg'>
+	<img src="" data-url='img/4.jpg'>
+	<img src="" data-url='img/5.jpg'>
+	<img src="" data-url='img/6.jpg'>
+	<img src="" data-url='img/7.jpg'>
+</div>
+<script type="text/javascript">
+	function LazyLoad(argument) {
+		this.alreadyLoad = 0; 
+	}
+
+	//获取元素到页面顶部的距离
+	LazyLoad.prototype.getOffsetTop = function(elem){
+		var offTop = 0;
+		while(elem!=null) {
+			offTop += elem.offsetTop;
+			elem = elem.offsetParent;
+		}
+		return offTop;
+	}
+	LazyLoad.prototype.loadImg = function(elems) {
+		for (var i = this.alreadyLoad; i < elems.length; i ++){
+			if(this.isLoad(elems[i])) {
+				elems[i].src = elems[i].dataset.url;
+				alreadyLoad = i;
+			}else {
+				console.log(i);
+				break;
+			}
+		}
+	};
+	LazyLoad.prototype.isLoad = function(elem) {
+
+		var cHeight = window.innerHeight || document.body.clientHeight || document.documentElelment.clientHeight;
+		var sX = window.pageXOffset || document.body.scrollTop || document.documentElement.scrollTop;
+		var oTop = this.getOffsetTop(elem); //元素到页面顶部的距离
+        var viewHeight = oTop - sX + 100; 
+        console.log(viewHeight);
+        console.log(oTop)
+		if( cHeight >= viewHeight ){
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+	var LazyLoad = new LazyLoad();
+	window.onscroll = function() {
+		console.log('scroll')
+		LazyLoad.loadImg(document.getElementsByTagName("img"))
+	}
+	window.onload = function() {
+		LazyLoad.loadImg(document.getElementsByTagName("img"))
+		console.log(document.getElementsByTagName("img")[0].clientLeft);
+	}
+
+</script>
+</body>
+</html>
